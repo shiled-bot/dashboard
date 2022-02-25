@@ -8,8 +8,8 @@ client/node_modules
 node_modules
 
 # package-lock
-api/package-lock.json
 client/package-lock.json
+package-lock.json
 
 # Environment Secrets
 .env
