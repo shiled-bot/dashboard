@@ -1,0 +1,16 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+api/node_modules
+app/node_modules
+node_modules
+
+# package-lock
+api/package-lock.json
+app/package-lock.json
+
+# Environment Secrets
+api/.env
