@@ -24,9 +24,9 @@ BOT_TOKEN =
 ```
 `CLIENT_ORIGIN`: client origin url
 
-`CLIENT_ID`: your discord app client id
+`BOT_ID`: your discord app client id
 
-`CLIENT_SECRET`: your discord app client secret
+`BOT_SECRET`: your discord app client secret
 
 ![preview](https://i.postimg.cc/K8tVxHF8/Screenshot-2022-02-20-162158.png)
 
