@@ -106,17 +106,24 @@ export const login = (req, res) => {
     });
 };
 
-export const getUser = (req, res) => {
-  const { userId } = req;
-  userModel.getUser(userId)
-  .then(user => res.json({ 
-    isLoggedIn: true,
-    user: {
-      id: user.discord_id,
-      username: user.username,
-      discriminator: user.discriminator,
-      avatar: user.avatarURL
-    }
-  }))
-  .catch(err => res.status(500).json({ error: err }));
+export const isAuth = (req, res) => {
+  const token = req.headers["x-access-token"]?.split(" ")[1];
+    
+  if (!token) return res.json({ isLoggedIn: false });
+  
+  jwt.verify(token, JWT_SECRET, (err, paylod) => {
+      if (err) return res.json({ isLoggedIn: false });
+
+      userModel.getUser(paylod.id)
+      .then(user => res.json({ 
+        isLoggedIn: true,
+        user: {
+          id: user.discord_id,
+          username: user.username,
+          discriminator: user.discriminator,
+          avatar: user.avatarURL
+        }
+      }))
+      .catch(err => res.status(500).json({ error: err }));
+  });
 }

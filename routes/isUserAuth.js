@@ -2,9 +2,8 @@ import { Router } from "express";
 
 const router = Router();
 
-import { getUser } from "../controllers/authentication.js";
-import isAuth from "./guards/auth.js";
+import { isAuth } from "../controllers/authentication.js";
 
-router.get('/', isAuth, getUser);
+router.get('/', isAuth);
 
 export default router;
