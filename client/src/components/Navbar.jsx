@@ -2,8 +2,25 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../images/avatar.webp";
 
+const avatarFailHandler = (setIsAvatarImageValid) =>
+  setIsAvatarImageValid(false);
+
+const DefaultAvatar = ({ username }) => {
+  const text = username
+    .split(" ")
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase());
+
+  return (
+    <div className="rounded-full w-10 h-10 bg-blue font-medium text-sm flex items-center justify-center select-none">
+      {text}
+    </div>
+  );
+};
+
 const ProfileDropDown = ({ user: { avatar, username, id } }) => {
   const [isActive, setActive] = useState(false);
+  const [isAvatarImageValid, setIsAvatarImageValid] = useState(Boolean(avatar));
 
   const dropdownHandler = () => setActive(!isActive);
 
@@ -14,11 +31,16 @@ const ProfileDropDown = ({ user: { avatar, username, id } }) => {
           className="w-10 h-10 outline-none rounded-full hover:opacity-90"
           onClick={dropdownHandler}
         >
-          <img
-            src={avatar}
-            className="w-full h-full rounded-full"
-            alt={username}
-          />
+          {isAvatarImageValid ? (
+            <img
+              src={avatar}
+              className="w-full h-full rounded-full"
+              onError={() => avatarFailHandler(setIsAvatarImageValid)}
+              alt={username}
+            />
+          ) : (
+            <DefaultAvatar username={username} />
+          )}
         </button>
       </div>
       <ul
@@ -57,6 +79,7 @@ const ProfileDropDown = ({ user: { avatar, username, id } }) => {
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
+  const [isAvatarImageValid, setIsAvatarImageValid] = useState(false);
   const [isActive, setActive] = useState(false);
   const mobileNavDisplay = isActive ? "flex" : "hidden";
 
@@ -67,7 +90,12 @@ const Navbar = () => {
       headers: { "x-access-token": localStorage.getItem("token") },
     })
       .then((res) => res.json())
-      .then((data) => (data.isLoggedIn ? setUser(data.user) : null));
+      .then(
+        (data) => {
+          if (!data.isLoggedIn) return;
+          setUser(data.user);
+          setIsAvatarImageValid(Boolean(data.user.avatar))
+        });
   }, [localStorage.getItem("token")]);
 
   return (
@@ -96,12 +124,19 @@ const Navbar = () => {
           {user ? (
             <>
               <li className="md:hidden flex items-center text-white-100 md:p-0 md:hover:p-0 px-5 pr-2 py-3">
-                <img
-                  src={user.avatar}
-                  className="w-6 h-6 rounded-full"
-                  alt={user.username}
-                />
-                <span className="ml-2">{user.username}#{user.discriminator}</span>
+                {isAvatarImageValid ? (
+                  <img
+                    src={user.avatar}
+                    className="w-10 h-10 rounded-full"
+                    alt={user.username}
+                    onError={() => avatarFailHandler(setIsAvatarImageValid)}
+                  />
+                ) : (
+                  <DefaultAvatar username={user.username} />
+                )}
+                <span className="ml-2">
+                  {user.username}#{user.discriminator}
+                </span>
               </li>
               <Link
                 to="/logout"
