@@ -1,15 +1,18 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Error from "../components/Error";
+import { useDispatch } from "react-redux";
+import { changeToken } from "redux/slices/authSlice";
 
 const Login = () => {
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(window.location.search);
   const codeGrant = queryParams.get("code");
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    (async function () {      
+    (async function () {
       if (codeGrant) {
         fetch(process.env.REACT_APP_API_URL + "/login", {
           method: "post",
@@ -19,7 +22,7 @@ const Login = () => {
           .then((res) => res.json())
           .then((data) => {
             if (data.error) return setError(true);
-            localStorage.setItem("token", data.token);
+            dispatch(changeToken(data.token))
             navigate("/dashboard");
           })
           .catch(err => {
@@ -27,7 +30,7 @@ const Login = () => {
           });
       } else window.location.replace(process.env.REACT_APP_OAuth2_URL);
     })();
-  }, []);
+  }, [codeGrant, dispatch, navigate]);
 
   if (!error) {
     return (

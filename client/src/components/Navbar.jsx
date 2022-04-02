@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../images/avatar.webp";
+import { useDispatch, useSelector } from "react-redux"
+import { checkIsUserAuth, changeAvatarImageValid } from "redux/slices/authSlice";
 
-const avatarFailHandler = (setIsAvatarImageValid) =>
-  setIsAvatarImageValid(false);
 
 const DefaultAvatar = ({ username }) => {
+  console.log(username)
   const text = username
     .split(" ")
     .slice(0, 2)
@@ -18,9 +19,9 @@ const DefaultAvatar = ({ username }) => {
   );
 };
 
-const ProfileDropDown = ({ user: { avatar, username, id } }) => {
+const ProfileDropDown = ({ avatarImageValid, user: { avatar, username, id } }) => {
   const [isActive, setActive] = useState(false);
-  const [isAvatarImageValid, setIsAvatarImageValid] = useState(Boolean(avatar));
+  const dispatch = useDispatch();
 
   const dropdownHandler = () => setActive(!isActive);
 
@@ -31,11 +32,11 @@ const ProfileDropDown = ({ user: { avatar, username, id } }) => {
           className="w-10 h-10 outline-none rounded-full hover:opacity-90"
           onClick={dropdownHandler}
         >
-          {isAvatarImageValid ? (
+          {avatarImageValid ? (
             <img
               src={avatar}
               className="w-full h-full rounded-full"
-              onError={() => avatarFailHandler(setIsAvatarImageValid)}
+              onError={() => dispatch(changeAvatarImageValid(false))}
               alt={username}
             />
           ) : (
@@ -44,9 +45,8 @@ const ProfileDropDown = ({ user: { avatar, username, id } }) => {
         </button>
       </div>
       <ul
-        className={`bg-nav -left-40 top-16 absolute border overflow-hidden border-white-300 rounded-md text-sm w-52 shadow-md ${
-          isActive ? "block" : "hidden"
-        }`}
+        className={`bg-nav -left-40 top-16 absolute border overflow-hidden border-white-300 rounded-md text-sm w-52 shadow-md ${isActive ? "block" : "hidden"
+          }`}
       >
         <li className="text-white-200 p-2.5">
           <span className="select-none">ID: </span>
@@ -78,25 +78,17 @@ const ProfileDropDown = ({ user: { avatar, username, id } }) => {
 };
 
 const Navbar = () => {
-  const [user, setUser] = useState(null);
-  const [isAvatarImageValid, setIsAvatarImageValid] = useState(false);
   const [isActive, setActive] = useState(false);
   const mobileNavDisplay = isActive ? "flex" : "hidden";
+  const dispatch = useDispatch()
+  const { user, avatarImageValid, token } = useSelector(state => state.auth)
+
 
   const toogleLinksHandler = () => setActive(!isActive);
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + "/isUserAuth", {
-      headers: { "x-access-token": localStorage.getItem("token") },
-    })
-      .then((res) => res.json())
-      .then(
-        (data) => {
-          if (!data.isLoggedIn) return;
-          setUser(data.user);
-          setIsAvatarImageValid(Boolean(data.user.avatar))
-        });
-  }, [localStorage.getItem("token")]);
+    dispatch(checkIsUserAuth(token))
+  }, [dispatch, token]);
 
   return (
     <nav className="bg-nav relative z-10 shadow-sm font-serif px-8 py-5 md:py-4">
@@ -124,12 +116,12 @@ const Navbar = () => {
           {user ? (
             <>
               <li className="md:hidden flex items-center text-white-100 md:p-0 md:hover:p-0 px-5 pr-2 py-3">
-                {isAvatarImageValid ? (
+                {avatarImageValid ? (
                   <img
                     src={user.avatar}
                     className="w-10 h-10 rounded-full"
                     alt={user.username}
-                    onError={() => avatarFailHandler(setIsAvatarImageValid)}
+                    onError={() => dispatch(changeAvatarImageValid(false))}
                   />
                 ) : (
                   <DefaultAvatar username={user.username} />
@@ -186,7 +178,7 @@ const Navbar = () => {
         {/* Login button or User block */}
 
         {user ? (
-          <ProfileDropDown user={user} />
+          <ProfileDropDown avatarImageValid={avatarImageValid} user={user} />
         ) : (
           <div className="md:block hidden">
             <Link
