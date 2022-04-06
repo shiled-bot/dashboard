@@ -11,7 +11,7 @@ export const checkIsUserAuth = createAsyncThunk("auth/checkIsUserAuth", async (t
     if (!token) return {}
 
     const res = await axios.get(
-        process.env.REACT_APP_API_URL + "/isUserAuth",
+        process.env.REACT_APP_API_URL + "/users",
         { headers: { "x-access-token": token } }
     )
 

@@ -14,11 +14,11 @@ app.use(bodyParser)
 app.use(cors({origin: CLIENT_ORIGIN}));
 
 // routers
-import loginRouter from "./routes/login.js";
-import isUserAuthRouter from "./routes/isUserAuth.js";
+import usersRouter from "./routes/users.js";
+import guildsRouter from "./routes/guilds.js";
 
-app.use("/login", loginRouter);
-app.use("/isUserAuth", isUserAuthRouter)
+app.use("/users", usersRouter);
+app.use("/guilds", guildsRouter)
 
 mongoose.connect(DB_URI)
 .then(() => {

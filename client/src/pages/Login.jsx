@@ -14,7 +14,7 @@ const Login = () => {
   useEffect(() => {
     (async function () {
       if (codeGrant) {
-        fetch(process.env.REACT_APP_API_URL + "/login", {
+        fetch(process.env.REACT_APP_API_URL + "/users", {
           method: "post",
           body: JSON.stringify({ codeGrant }),
           headers: { "content-type": "application/json" },
