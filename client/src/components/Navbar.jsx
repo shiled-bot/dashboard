@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link as a } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../images/avatar.webp";
 import { useDispatch, useSelector } from "react-redux"
 import { checkIsUserAuth, changeAvatarImageValid } from "redux/slices/authSlice";
@@ -51,7 +51,7 @@ const ProfileDropDown = ({ avatarImageValid, user: { avatar, username, id } }) =
           <span className="select-none">ID: </span>
           <span className="font-bold">{id}</span>
         </li>
-        <a
+        <Link
           to="/logout"
           className="flex items-center text-white-200 duration-75 p-2.5 hover:bg-[#131212] hover:pl-2"
         >
@@ -70,7 +70,7 @@ const ProfileDropDown = ({ avatarImageValid, user: { avatar, username, id } }) =
             />
           </svg>
           Logout
-        </a>
+        </Link>
       </ul>
     </div>
   );
@@ -99,12 +99,12 @@ const Navbar = () => {
             mobileNavDisplay
           }
         >
-          <a
+          <Link
             to="/commands"
             className="md:hover:bg-transparent md:p-0 hover:text-white-100 hover:bg-[#131212] duration-300 hover:pl-7 md:hover:p-0 px-5 pr-2 py-3"
           >
             Commands
-          </a>
+          </Link>
           <a
             href="/support"
             target="_blank"
@@ -130,7 +130,7 @@ const Navbar = () => {
                   {user.username}#{user.discriminator}
                 </span>
               </li>
-              <a
+              <Link
                 to="/logout"
                 className="md:hidden flex items-center bg-[#0e0e0e] hover:bg-body duration-300 hover:pl-3 md:hover:p-0 px-5 pr-2 py-3 text-white-100"
               >
@@ -149,10 +149,10 @@ const Navbar = () => {
                   />
                 </svg>
                 Logout
-              </a>
+              </Link>
             </>
           ) : (
-            <a
+            <Link
               to="/login"
               className="md:hidden flex items-center bg-[#0e0e0e] hover:bg-body duration-300 hover:pl-7 md:hover:p-0 px-5 pr-2 py-3 text-white-100"
             >
@@ -171,7 +171,7 @@ const Navbar = () => {
                 />
               </svg>
               Login
-            </a>
+            </Link>
           )}
         </ul>
 
@@ -181,12 +181,12 @@ const Navbar = () => {
           <ProfileDropDown avatarImageValid={avatarImageValid} user={user} />
         ) : (
           <div className="md:block hidden">
-            <a
+            <Link
               to="/login"
               className="px-3 py-2 rounded text-white-100 border-white-400 border duration-300 hover:border-[#303030] hover:rounded-none hover:shadow-sm active:shadow-lg"
             >
               Login
-            </a>
+            </Link>
           </div>
         )}
 
