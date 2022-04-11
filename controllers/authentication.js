@@ -80,7 +80,6 @@ export const login = (req, res) => {
               iconURL: guild.icon
                 ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp`
                 : null,
-              isOwner: guild.owner,
             };
           }
         })

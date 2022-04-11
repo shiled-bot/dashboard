@@ -10,7 +10,6 @@ const User = mongoose.model("user", new mongoose.Schema({
         discord_id: String,
         name: String,
         iconURL: String,
-        isOwner: Boolean,
       },
     ],
     refresh_token: String,
