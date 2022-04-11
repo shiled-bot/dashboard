@@ -3,6 +3,8 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import NotFound from "./pages/NotFound";
+import ServerPicker from "pages/dashboard/ServerPicker";
+
 // Redux
 import { Provider } from "react-redux";
 import store from "redux/store.js"
@@ -15,6 +17,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/logout" element={<Logout />}></Route>
+          <Route path="/dashboard" element={< ServerPicker/>}></Route>
           <Route path="/" element={<h1>Welcom To Home Page</h1>}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
