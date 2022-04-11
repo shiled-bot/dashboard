@@ -1,0 +1,229 @@
+$body: #202225;
+$input: #40444b;
+$nav: #131212;
+
+body {
+  background-color: $body;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+main {
+  margin: 40px auto 20px;
+  width: 90%;
+}
+
+.server-picker {
+  background-color: $nav;
+  border-radius: 2px;
+  box-shadow: 0 0px 15px -2px rgba(0, 0, 0, 0.75);
+  padding: 10px 17px;
+  min-height: 450px;
+  .label {
+    padding: 10px 5px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    margin-bottom: 30px;
+    user-select: none;
+    i {
+      margin-right: 5px;
+    }
+  }
+  .guilds-container {
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(2, minmax(150px, min-content));
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    .guild {
+      width: max-content;
+      position: relative;
+      &.no-icon {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @media only screen and (max-width: 615px) {
+        margin: 0 auto;
+      }
+      .name {
+        background-color: $input;
+        text-align: center;
+        padding: 5px;
+        font-size: 15px;
+        font-weight: 400;
+        position: absolute;
+        color: #fff;
+        border-radius: 2px;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        box-shadow: 0 3px 5px -3px #030303;
+        opacity: 0;
+        cursor: default;
+        z-index: 10;
+        a {
+          color: inherit;
+          font-weight: 500;
+          cursor: pointer !important;
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          border-color: transparent transparent $input transparent;
+          border-width: 5px;
+          border-style: solid;
+          left: 50%;
+          transform: translateX(-50%);
+          top: -10px;
+        }
+      }
+      a,
+      div {
+        cursor: pointer;
+        img {
+          width: 130px;
+          user-select: none;
+          border-radius: 50%;
+          border: 3px solid rgb(106, 255, 170);
+          transition: border 0.2s linear;
+          &:hover {
+            border-color: rgb(23, 248, 120);
+          }
+          &.err {
+            padding: 8px;
+            background: #747474;
+            filter: grayscale(100%);
+          }
+        }
+        &:hover ~ .name {
+          opacity: 1;
+        }
+        &.icon {
+          font-size: 40px;
+          color: #fff;
+          border-radius: 50%;
+          background: #3f3f3f;
+          border: 3px solid #6affaa;
+          display: block;
+          width: 120px;
+          height: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+        }
+      }
+      &.not-ok {
+        a,
+        div {
+          filter: grayscale(100%);
+          cursor: no-drop;
+        }
+        .name {
+          bottom: -43px !important;
+        }
+      }
+    }
+  }
+}
+
+.refresh {
+  width: max-content;
+  margin: 0 auto;
+  color: #fff;
+  margin: 20px auto 0;
+  outline: none;
+  background-color: #161616;
+  border: 1px solid #0a0a0a;
+  padding: 7px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 17px;
+  transition: filter 0.1s;
+  user-select: none;
+  box-shadow: 0 0px 5px -2px rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  svg {
+    color: #4c6ef5;
+    margin-right: 7px;
+  }
+  &:hover {
+    filter: brightness(0.7);
+  }
+  &:active {
+    filter: brightness(0.9);
+  }
+  &.loading {
+    cursor: progress;
+    filter: brightness(0.5);
+    &:hover {
+      filter: brightness(0.5);
+    }
+    &:active {
+      filter: brightness(0.5);
+    }
+  }
+}
+
+._loading {
+  position: absolute;
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%);
+  font-size: 35px;
+  color: #fff;
+  .letter {
+    animation-name: loading;
+    animation-duration: 1.8s;
+    animation-iteration-count: infinite;
+    animation-direction: linear;
+    &.l-1 {
+      animation-delay: 0.5s;
+    }
+    &.l-2 {
+      animation-delay: 0.7s;
+    }
+    &.l-3 {
+      animation-delay: 0.9s;
+    }
+    &.l-4 {
+      animation-delay: 1.1s;
+    }
+    &.l-5 {
+      animation-delay: 1.3s;
+    }
+    &.l-6 {
+      animation-delay: 1.5s;
+    }
+    &.l-7 {
+      animation-delay: 1.7s;
+    }
+    &.l-8 {
+      animation-delay: 1.9s;
+    }
+    &.l-9 {
+      margin-left: 2px;
+      animation-delay: 2.1s;
+    }
+    &.l-10 {
+      animation-delay: 2.3s;
+    }
+    &.l-11 {
+      animation-delay: 2.5s;
+    }
+  }
+}
+
+@keyframes loading {
+  0% {
+    opacity: .2;
+  }
+  100% {
+    opacity: .9;
+  }
+} ;
