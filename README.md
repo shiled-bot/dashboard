@@ -1,4 +1,4 @@
-# shield-bot-dashboard
+# Shield Bot Dashboard
 
 Discord bot web dashboard with MERN stack
 
@@ -7,7 +7,7 @@ Discord bot web dashboard with MERN stack
 store your MongoDB database credentials
 
 ```
-DB_URI = mongodb+srv://<username>:<password>@cluster0.6m5cz.mongodb.net/botlist
+DB_URI = mongodb+srv://<username>:<password>@cluster0.6m5cz.mongodb.net/mybotname
 ```
 
 json web token secret
