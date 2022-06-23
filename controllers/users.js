@@ -30,7 +30,7 @@ export const getUserGuilds = async (req, res) => {
     })
       .then((response) => response.json())
       .then(({ refresh_token, token_type, access_token }) => {
-        
+
         new_refresh_token = refresh_token;
         return fetch(usersBase + "guilds", {
           headers: {
@@ -56,43 +56,43 @@ export const getUserGuilds = async (req, res) => {
           })
           .filter(Boolean);
 
-          return updateUser(userId, { guilds: fetchedGuilds, refresh_token: new_refresh_token });
+        return updateUser(userId, { guilds: fetchedGuilds, refresh_token: new_refresh_token });
       })
       .then(() => true);
-}
+  }
 
   // check if bot in guild and update guild
-    const userGuilds = fetchedGuilds ?? user.guilds;
-    const guilds = [];
-    for (const guild of userGuilds) {
-      const response = await fetch(
-        guildsBase + guild.discord_id,
-        {
-          headers: {
-            Authorization: `Bot ${BOT_TOKEN}`,
-          },
-        }
-      );
-      const fetchedGuild = await response.json();
-      if (fetchedGuild.id) {
-        guilds.push({
-          discord_id: fetchedGuild.id,
-          name: fetchedGuild.name,
-          iconURL: fetchedGuild.icon
-            ? `https://cdn.discordapp.com/icons/${fetchedGuild.id}/${fetchedGuild.icon}.webp`
-            : null,
-          botInGuild: true,
-        });
-      } else guilds.push(guild);
-    }
+  const userGuilds = fetchedGuilds ?? user.guilds;
+  const guilds = [];
+  for (const guild of userGuilds) {
+    const response = await fetch(
+      guildsBase + guild.discord_id,
+      {
+        headers: {
+          Authorization: `Bot ${BOT_TOKEN}`,
+        },
+      }
+    );
+    const fetchedGuild = await response.json();
+    if (fetchedGuild.id) {
+      guilds.push({
+        discord_id: fetchedGuild.id,
+        name: fetchedGuild.name,
+        iconURL: fetchedGuild.icon
+          ? `https://cdn.discordapp.com/icons/${fetchedGuild.id}/${fetchedGuild.icon}.webp`
+          : null,
+        botInGuild: true,
+      });
+    } else guilds.push(guild);
+  }
 
-    res.json({
-      guilds: guilds.sort((guild, nextGuild) =>
-        guild.botInGuild === nextGuild.botInGuild
-          ? 0
-          : guild.botInGuild
+  res.json({
+    guilds: guilds.sort((guild, nextGuild) =>
+      guild.botInGuild === nextGuild.botInGuild
+        ? 0
+        : guild.botInGuild
           ? -1
           : 1
-      ),
-    });
+    ),
+  });
 };

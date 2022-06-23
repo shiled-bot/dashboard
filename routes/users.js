@@ -2,9 +2,10 @@ import { Router } from "express";
 
 const router = Router();
 
-import { login, isAuth } from "../controllers/authentication.js";
+import { login, logout, isAuth } from "../controllers/authentication.js";
 
 router.get('/', isAuth)
 router.post('/', login);
+router.get('/logout', logout)
 
 export default router;

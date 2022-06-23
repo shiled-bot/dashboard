@@ -15,6 +15,7 @@ export const login = (req, res) => {
   if (!codeGrant)
     return res.status(401).json({ error: "missing user code grant" });
 
+
   let userObject = {
     discord_id: null,
     username: null,
@@ -73,31 +74,47 @@ export const login = (req, res) => {
     .then((res) => res.json())
     .then((guilds) => {
       userObject.guilds = guilds.map((guild) => {
-          if (reslovePermissions(guild.permissions).includes("ADMINISTRATOR")) {
-            return {
-              discord_id: guild.id,
-              name: guild.name,
-              iconURL: guild.icon
-                ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp`
-                : null,
-            };
-          }
-        })
+        if (reslovePermissions(guild.permissions).includes("ADMINISTRATOR")) {
+          return {
+            discord_id: guild.id,
+            name: guild.name,
+            iconURL: guild.icon
+              ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp`
+              : null,
+          };
+        }
+      })
         .filter(Boolean);
     })
     .then(() => userModel.getUser(userObject.discord_id))
     .then(isUserExist => {
       const data = userObject;
+
       return isUserExist ? userModel.updateUser(data.discord_id, data) : userModel.createUser(data);
     })
     .then(() => {
+      console.log(userObject.discord_id)
+      const EXPIRY_AMOUNT = 7 * 24 * 60 * 60 // in seconds
+
       const token = jwt.sign(
-        {id: userObject.discord_id},
+        { id: userObject.discord_id },
         JWT_SECRET,
-        { expiresIn: 7 * 24 * 60 * 60 }
+        { expiresIn: EXPIRY_AMOUNT }
       );
 
-      res.status(200).json({ message: "success", token: `Bearer ${token}`});
+      res.cookie("token", token, {
+        maxAge: EXPIRY_AMOUNT * 100, // in ms
+        httpOnly: true
+      })
+
+      res.status(200).json({
+        message: "success", user: {
+          id: userObject.discord_id,
+          username: userObject.username,
+          discriminator: userObject.discriminator,
+          avatar: userObject.avatarURL
+        }
+      });
     })
     .catch((error) => {
       res.json({ error: error.message });
@@ -106,15 +123,18 @@ export const login = (req, res) => {
 };
 
 export const isAuth = (req, res) => {
-  const token = req.headers["x-access-token"]?.split(" ")[1];
-    
-  if (!token) return res.json({ isLoggedIn: false });
-  
-  jwt.verify(token, JWT_SECRET, (err, paylod) => {
-      if (err) return res.json({ isLoggedIn: false });
+  const token = req.cookies["token"]
 
-      userModel.getUser(paylod.id)
-      .then(user => res.json({ 
+  if (!token) return res.json({ isLoggedIn: false });
+
+  jwt.verify(token, JWT_SECRET, (err, paylod) => {
+    if (err) {
+      res.clearCookie("token")
+      return res.json({ isLoggedIn: false });
+    }
+
+    userModel.getUser(paylod.id)
+      .then(user => res.json({
         isLoggedIn: true,
         user: {
           id: user.discord_id,
@@ -125,4 +145,12 @@ export const isAuth = (req, res) => {
       }))
       .catch(err => res.status(500).json({ error: err }));
   });
+}
+
+export const logout = (req, res) => {
+  res.clearCookie("token")
+  res.status(200).send({
+    isLoggedIn: false,
+    user: {}
+  })
 }
