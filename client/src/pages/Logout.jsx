@@ -4,13 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import { logoutUser } from "redux/slices/authSlice";
 
-
-const Login = () => {
+const Logout = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(logoutUser())
+    dispatch(logoutUser());
     navigate("/");
   });
 
@@ -39,4 +38,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Logout;
