@@ -103,7 +103,7 @@ export const login = (req, res) => {
       );
 
       res.cookie("token", token, {
-        maxAge: EXPIRY_AMOUNT * 100, // in ms
+        maxAge: EXPIRY_AMOUNT * 1000, // in ms
         httpOnly: true
       })
 
