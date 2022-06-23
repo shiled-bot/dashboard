@@ -2,7 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Error from "../components/Error";
 import { useDispatch } from "react-redux";
-import { changeToken } from "redux/slices/authSlice";
+import { storeUser } from "redux/slices/authSlice";
 
 const Login = () => {
   const [error, setError] = useState(false);
@@ -15,14 +15,17 @@ const Login = () => {
     (async function () {
       if (codeGrant) {
         fetch(process.env.REACT_APP_API_URL + "/users", {
+          credentials: "include",
           method: "post",
           body: JSON.stringify({ codeGrant }),
           headers: { "content-type": "application/json" },
         })
           .then((res) => res.json())
           .then((data) => {
-            if (data.error) return setError(true);
-            dispatch(changeToken(data.token))
+            if (data.error) {
+              return setError(true);
+            }
+            dispatch(storeUser(data.user))
             navigate("/dashboard");
           })
           .catch(err => {

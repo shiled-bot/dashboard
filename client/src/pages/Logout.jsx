@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeToken } from "redux/slices/authSlice";
+
+import { logoutUser } from "redux/slices/authSlice";
+
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(removeToken())
+    dispatch(logoutUser())
     navigate("/");
   });
 

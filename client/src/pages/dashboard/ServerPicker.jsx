@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { handleUnauthorizedError } from "utilities/handlers";
+
 import "./ServerPicker.scss";
 
 const DefaultAvatar = ({ name, botInGuild, discord_id }) => {
@@ -41,7 +44,7 @@ const ServerBlock = ({ guild }) => {
           </div>
         )
       ) : (
-        <DefaultAvatar name={guild.name} botInGuild={guild.botInGuild} discord_id={guild.discord_id}/>
+        <DefaultAvatar name={guild.name} botInGuild={guild.botInGuild} discord_id={guild.discord_id} />
       )}
       {guild.botInGuild ? (
         <span className="name">{guild.name}</span>
@@ -70,38 +73,38 @@ const LoadingHeading = () => {
       <span className="l-9 letter">.</span>
       <span className="l-10 letter">.</span>
       <span className="l-11 letter">.</span>
-  </div>
+    </div>
   )
 };
 
 const ServerPicker = () => {
   const [guilds, setGuilds] = useState(null);
   const [updated, setUpdated] = useState(true);
-  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
       .get(process.env.REACT_APP_API_URL + "/guilds", {
-        headers: { "x-access-token": token },
+        withCredentials: true
       })
       .then(({ data: { guilds } }) => {
         if (!guilds) return;
         setGuilds(guilds);
-      });
-  }, []);
+      }).catch(err => handleUnauthorizedError(err, navigate))
+  }, [navigate]);
 
   const refreshGuildHandler = () => {
     setGuilds(null);
     setUpdated(false);
     axios
-    .get(process.env.REACT_APP_API_URL + "/guilds?refetch=true", {
-      headers: { "x-access-token": token },
-    })
-    .then(({ data: { guilds } }) => {
-      if (!guilds) return;
-      setUpdated(true);
-      setGuilds(guilds);
-    });
+      .get(process.env.REACT_APP_API_URL + "/guilds?refetch=true", {
+        withCredentials: true
+      })
+      .then(({ data: { guilds } }) => {
+        if (!guilds) return;
+        setUpdated(true);
+        setGuilds(guilds);
+      }).catch(err => handleUnauthorizedError(err, navigate))
   };
 
   return (

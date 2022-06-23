@@ -80,14 +80,14 @@ const Navbar = () => {
   const [isActive, setActive] = useState(false);
   const mobileNavDisplay = isActive ? "flex" : "hidden";
   const dispatch = useDispatch()
-  const { user, avatarImageValid, token } = useSelector(state => state.auth)
+  const { user, avatarImageValid } = useSelector(state => state.auth)
 
 
   const toogleLinksHandler = () => setActive(!isActive);
 
   useEffect(() => {
-    dispatch(checkIsUserAuth(token))
-  }, [dispatch, token]);
+    dispatch(checkIsUserAuth())
+  }, [dispatch]);
 
   return (
     <nav className="bg-nav relative z-10 shadow-sm font-serif px-8 py-5 md:py-4">
