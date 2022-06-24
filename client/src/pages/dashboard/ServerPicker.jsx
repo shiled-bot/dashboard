@@ -1,10 +1,11 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { handleUnauthorizedError } from "utilities/handlers";
+import { ApiRequest } from "utilities/lib";
 
 import "./ServerPicker.scss";
+
+const api = new ApiRequest(process.env.REACT_APP_API_URL, { withCredentials: true }, true)
 
 const DefaultAvatar = ({ name, botInGuild, discord_id }) => {
   const text = name
@@ -83,28 +84,32 @@ const ServerPicker = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(process.env.REACT_APP_API_URL + "/guilds", {
-        withCredentials: true
-      })
-      .then(({ data: { guilds } }) => {
-        if (!guilds) return;
-        setGuilds(guilds);
-      }).catch(err => handleUnauthorizedError(err, navigate))
-  }, [navigate]);
+    (async function () {
+      try {
+        const { data: { guilds } } = await api.get("/guilds", {}, navigate)
 
-  const refreshGuildHandler = () => {
-    setGuilds(null);
-    setUpdated(false);
-    axios
-      .get(process.env.REACT_APP_API_URL + "/guilds?refetch=true", {
-        withCredentials: true
-      })
-      .then(({ data: { guilds } }) => {
         if (!guilds) return;
+
         setUpdated(true);
         setGuilds(guilds);
-      }).catch(err => handleUnauthorizedError(err, navigate))
+      } catch (err) { /* err handling */ }
+    })()
+  }, [navigate]);
+
+  const refreshGuildHandler = async () => {
+    setGuilds(null);
+    setUpdated(false);
+
+
+    try {
+      const { data: { guilds } } = await api.get("/guilds?refetch=true", {}, navigate)
+
+      if (!guilds) return;
+
+      setUpdated(true);
+      setGuilds(guilds);
+    } catch (err) { /* err handling */ }
+
   };
 
   return (

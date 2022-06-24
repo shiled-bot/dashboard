@@ -1,0 +1,8 @@
+.progress-bar {
+    background-color: #0096ff;
+    width: 100%;
+    height: 3px;
+    position: absolute;
+    z-index: 11;
+    transition: width 400ms ease-in-out;
+}
