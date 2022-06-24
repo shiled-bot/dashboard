@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import "./ProgressBar.css"
+import ProgressBarCSS from "./ProgressBar.module.css"
 
 
 export default function ProgressBar() {
@@ -9,6 +9,6 @@ export default function ProgressBar() {
     if (!loading) return <></>;
 
     return (
-        <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+        <div className={ProgressBarCSS["progress-bar"]} style={{ width: `${progress}%` }}></div>
     )
 }

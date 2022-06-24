@@ -24,7 +24,7 @@ export class ApiRequest {
         if (this.trackProgress) {
             store.dispatch(changeLoadingState(true));
             // added timeout so it animates on initialization
-            setTimeout(() => store.dispatch(changeProgress(2.5)), 150)
+            setTimeout(() => store.dispatch(changeProgress(15)), 150)
         }
 
 
@@ -36,6 +36,8 @@ export class ApiRequest {
 
             return res
         } catch (err) {
+            store.dispatch(changeLoadingState(false))
+
             if (navigate !== null) {
                 handleUnauthorizedError(err, navigate)
             }
