@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import logo from "../images/avatar.webp";
 import { useDispatch, useSelector } from "react-redux"
@@ -18,11 +18,34 @@ const DefaultAvatar = ({ username }) => {
   );
 };
 
-const ProfileDropDown = ({ avatarImageValid, user: { avatar, username, id } }) => {
+const ProfileDropdown = ({ avatarImageValid, user: { avatar, username, id } }) => {
   const [isActive, setActive] = useState(false);
   const dispatch = useDispatch();
 
   const dropdownHandler = () => setActive(!isActive);
+
+  const dropdownBtnEle = useRef();
+  const dropdownEle = useRef();
+
+  useEffect(() => {
+    const listener = ({ target }) => {
+      if (
+          (
+            !target.isSameNode(dropdownBtnEle.current) &&
+            !dropdownBtnEle.current.contains(target)
+          ) &&
+          (
+            !target.isSameNode(dropdownEle.current) &&
+            !dropdownEle.current.contains(target)
+          )
+      )
+      setActive(false);
+    };
+
+    document.addEventListener("click", listener);
+
+    return () => document.removeEventListener("click", listener)
+  }, [])
 
   return (
     <div className="hidden relative md:block">
@@ -30,6 +53,7 @@ const ProfileDropDown = ({ avatarImageValid, user: { avatar, username, id } }) =
         <button
           className="w-10 h-10 outline-none rounded-full hover:opacity-90"
           onClick={dropdownHandler}
+          ref={dropdownBtnEle}
         >
           {avatarImageValid ? (
             <img
@@ -44,8 +68,8 @@ const ProfileDropDown = ({ avatarImageValid, user: { avatar, username, id } }) =
         </button>
       </div>
       <ul
-        className={`bg-nav -left-40 top-16 absolute border overflow-hidden border-white-300 rounded-md text-sm w-52 shadow-md ${isActive ? "block" : "hidden"
-          }`}
+        className={`bg-nav -left-40 top-16 absolute border overflow-hidden border-white-300 rounded-md text-sm w-52 shadow-md ${isActive ? "block" : "hidden"}`}
+        ref={dropdownEle}
       >
         <li className="text-white-200 p-2.5">
           <span className="select-none">ID: </span>
@@ -80,7 +104,7 @@ const Navbar = () => {
   const [isActive, setActive] = useState(false);
   const mobileNavDisplay = isActive ? "flex" : "hidden";
   const dispatch = useDispatch()
-  const { user, avatarImageValid } = useSelector(state => state.auth)
+  const { user, avatarImageValid, isLoggedIn } = useSelector(state => state.auth)
 
 
   const toogleLinksHandler = () => setActive(!isActive);
@@ -95,10 +119,20 @@ const Navbar = () => {
         {/* Links */}
         <ul
           className={
-            "md:flex md:flex-row md:static md:gap-6 md:w-max w-[200px] top-[67px] z-20 text-white-200 text-sm font-medium absolute shadow-lg flex-col bg-nav rounded-b overflow-hidden " +
+            "md:flex md:flex-row md:static md:gap-6 md:w-max w-72 top-[67px] z-20 text-white-200 text-sm font-medium absolute shadow-lg flex-col bg-nav rounded-b overflow-hidden " +
             mobileNavDisplay
           }
         >
+          {
+            isLoggedIn && (
+              <Link
+                to="/dashboard"
+                className="md:hover:bg-transparent md:p-0 hover:text-white-100 hover:bg-[#131212] duration-300 hover:pl-7 md:hover:p-0 px-5 pr-2 py-3"
+              >
+                Dashboard
+              </Link>
+            )
+          }
           <Link
             to="/commands"
             className="md:hover:bg-transparent md:p-0 hover:text-white-100 hover:bg-[#131212] duration-300 hover:pl-7 md:hover:p-0 px-5 pr-2 py-3"
@@ -126,7 +160,7 @@ const Navbar = () => {
                 ) : (
                   <DefaultAvatar username={user.username} />
                 )}
-                <span className="ml-2">
+                <span className="ml-2 w-44 overflow-hidden text-ellipsis">
                   {user.username}#{user.discriminator}
                 </span>
               </li>
@@ -176,9 +210,8 @@ const Navbar = () => {
         </ul>
 
         {/* Login button or User block */}
-
         {user ? (
-          <ProfileDropDown avatarImageValid={avatarImageValid} user={user} />
+          <ProfileDropdown avatarImageValid={avatarImageValid} user={user} />
         ) : (
           <div className="md:block hidden">
             <Link
