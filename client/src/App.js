@@ -6,6 +6,7 @@ import Support from "pages/Support";
 import Commands from "pages/Commands";
 import NotFound from "./pages/NotFound";
 import ServerPicker from "pages/dashboard/ServerPicker";
+import ProgressBar from "components/ProgressBar/ProgressBar";
 import GuardAuth from "guards/GuardAuth";
 
 // Redux
@@ -16,6 +17,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
+        <ProgressBar />
         <Navbar />
         <Routes>
           <Route path="/login" element={<Login />}></Route>

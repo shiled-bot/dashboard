@@ -5,11 +5,10 @@ import { Link } from 'react-router-dom'
 
 
 export default function GuardAuth({ children }) {
-    const user = useSelector(state => state.auth.user)
+    const { userLoading, isLoggedIn } = useSelector(state => state.auth)
+    if (userLoading === true) return <></>
 
-    if (user === null) {
-        return <UnAuthorizedError />
-    }
+    if (isLoggedIn === false) return <UnAuthorizedError />
 
     return children
 }

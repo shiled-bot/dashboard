@@ -4,10 +4,12 @@ import axios from "axios"
 const initialState = {
     user: null,
     avatarImageValid: false,
-    isLoggedIn: false
+    isLoggedIn: false,
+    userLoading: true
 }
 
-export const checkIsUserAuth = createAsyncThunk("auth/checkIsUserAuth", async () => {
+export const checkIsUserAuth = createAsyncThunk("auth/checkIsUserAuth", async (dispatch) => {
+
     const res = await axios.get(
         process.env.REACT_APP_API_URL + "/users",
         { withCredentials: true }
@@ -45,6 +47,7 @@ const authSlice = createSlice({
     },
     extraReducers: {
         [checkIsUserAuth.fulfilled]: (state, action) => {
+            state.userLoading = false
             if (action.payload.isLoggedIn) {
                 state.isLoggedIn = true
                 state.user = action.payload.user;
@@ -54,6 +57,10 @@ const authSlice = createSlice({
         [checkIsUserAuth.rejected]: state => {
             state.user = null
             state.isLoggedIn = false
+            state.userLoading = false
+        },
+        [checkIsUserAuth.pending]: state => {
+            state.userLoading = true
         },
         [logoutUser.fulfilled]: state => {
             state.user = null
