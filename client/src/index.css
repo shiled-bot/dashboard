@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
+*::selection {
+  background-color: #3791db;
+  color: rgb(218, 218, 218);
+}
+
 html::-webkit-scrollbar {
   background-color: #2e3338;
 }
