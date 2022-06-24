@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import logo from "../images/avatar.webp";
+import logo from "../images/avatar.png";
 import { useDispatch, useSelector } from "react-redux"
 import { checkIsUserAuth, changeAvatarImageValid } from "redux/slices/authSlice";
 
@@ -266,7 +266,7 @@ const Navbar = () => {
       <div className="absolute flex md:block md:top-1 md:left-1/2 md:-translate-x-1/2 top-[2px] left-4 md:after:content-none after:content-['Shield_Bot'] after:items-center after:flex after:font-bold after:text-xl after:text-white-200">
         <img
           src={logo}
-          className="select-none md:border-solid md:border-2 md:border-body md:w-[80px] md:rounded-full border-none rounded-none w-[60px]"
+          className="select-none md:border-solid md:border-2 md:border-body md:w-24 md:rounded-full border-none rounded-none w-16"
           alt="logo"
         />
       </div>
