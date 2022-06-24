@@ -3,9 +3,10 @@ module.exports = {
   theme: {
     colors: {
       transparent: "transparent",
-      nav: "#1a1a1a",
+      nav: "#131212",
       body: "#202225",
       dark: "#072227",
+      black: "#000",
       blue: "#4c6ef5",
       "blue-light": "#4FBDBA",
       cyan: "#AEFEFF",
@@ -15,6 +16,10 @@ module.exports = {
         300: "#FFFFFF66",
         400: "#FFFFFF4d"
       },
+      inputs: {
+        bg: "#40444b",
+        focus: "#7579e7",
+      }
     },
     fontFamily: {
       sans: ["poppins", "sans-serif"],
