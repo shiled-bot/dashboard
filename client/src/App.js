@@ -3,6 +3,7 @@ import Navbar from "components/Navbar";
 import Login from "pages/Login";
 import Logout from "pages/Logout";
 import Support from "pages/Support";
+import Commands from "pages/Commands";
 import NotFound from "./pages/NotFound";
 import ServerPicker from "pages/dashboard/ServerPicker";
 import GuardAuth from "guards/GuardAuth";
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/logout" element={<Logout />}></Route>
           <Route path="/support" element={<Support />}></Route>
+          <Route path="/commands" element={<Commands />}></Route>
           <Route
             path="/dashboard"
             element={
